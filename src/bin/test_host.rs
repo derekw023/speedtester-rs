@@ -4,6 +4,7 @@ use axum::{
     routing::post,
     Extension, Json, Router, Server,
 };
+use clap::Parser;
 use color_eyre::{Report, Result};
 use rand::prelude::*;
 use speedtester_rs::api::{TestRequest, TestReservation};
@@ -22,6 +23,7 @@ use tower_http::trace::TraceLayer;
 use tracing::{debug, error, info, trace};
 use tracing_subscriber::EnvFilter;
 
+use speedtester_rs::auth::authenticate;
 // new test
 //- spawn thread
 //- create iperf server ctx for one off
@@ -30,6 +32,12 @@ use tracing_subscriber::EnvFilter;
 
 // Constants
 const MAX_CONCURRENT_TESTS: usize = 5;
+
+#[derive(Parser)]
+struct Config {
+    #[clap(env = "VALID_TOKENS", short = 'v')]
+    valid_tokens: Vec<String>,
+}
 
 struct State {
     active_ports: Arc<Mutex<HashSet<u16>>>,
@@ -114,8 +122,6 @@ async fn new_test(
 fn port_in_use(port: u16) -> bool {
     TcpListener::bind(("0.0.0.0", port)).is_ok()
 }
-
-async fn authenticate() {}
 
 // Consume an iperf server process handle and wait for it to finish
 async fn wait_for_iperf<T, E>(port: u16, state: Arc<State>, _permit: OwnedSemaphorePermit, task: T)

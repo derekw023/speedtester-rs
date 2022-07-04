@@ -21,11 +21,11 @@ hyper = { version = "0.14.19", features = ["full"] }
 hyper-tls = "0.5.0"
 
 # May help libiperf find SSL, although not sure if this does anything significant
-postgres = { version = "0.19.2", features = ["with-serde_json-1"] }
 rand = "0.8.5"
 serde = { version = "1.0.136", features = ["derive"] }
 serde_json = "1.0.79"
 tokio = { version = "1.17.0", features = ["full"] }
+tokio-postgres = "0.7.6"
 tower = { version = "0.4.13", features = ["full"] }
 tower-http = { version = "0.3.4", features = ["full"] }
 tracing = "0.1.31"
